@@ -18,8 +18,13 @@ public final class HibernateUtil {
         return sessionFactory;
     }
 
-    public static void save(Object obj) {
+    public static void open() {
         Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+    }
+
+    public static void save(Object obj) {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
         try {

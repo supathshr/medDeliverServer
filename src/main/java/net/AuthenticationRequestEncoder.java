@@ -4,7 +4,7 @@ public class AuthenticationRequestEncoder extends RequestEncoder<AuthenticationR
 
     @Override
     public Packet encode(AuthenticationResponse message) {
-        final RequestFrameBuilder builder = new RequestFrameBuilder();
+        final PacketBuilder builder = new PacketBuilder();
 
         builder.put("authKey", message.authKey);
         builder.put("authenticated", message.authenticated);

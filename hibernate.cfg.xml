@@ -8,16 +8,18 @@
     <session-factory>
         <!-- Database connection settings -->
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://localhost/app</property>
+        <property name="connection.url">jdbc:mysql://dragon.kent.ac.uk/co600_c37</property>
 
-        <property name="connection.username">root</property>
-        <property name="connection.password"></property>
+        <property name="connection.username">co600_c37</property>
+        <property name="connection.password">gsy-ndy</property>
 
         <!-- JDBC connection pool (use the built-in) -->
         <!-- <property name="connection.pool_size">1</property> -->
 
         <!-- SQL dialect -->
-        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+        <!-- <property name="dialect">org.hibernate.dialect.MySQLDialect</property> -->
+
+        <property name="dialect">org.hibernate.dialect.MariaDBDialect</property>
 
         <!-- Enable Hibernate's automatic session context management -->
         <property name="current_session_context_class">thread</property>
@@ -32,7 +34,12 @@
         <property name="hbm2ddl.auto">update</property>
 
         <!-- Path to Mapping files -->
-        <mapping class="persistence.User" />
+        <mapping class="persistence.jobs.Job" />
+        <mapping class="persistence.logins.Login" />
+        <mapping class="persistence.orders.Order" />
+        <mapping class="persistence.pharmacies.Pharmacy" />
+        <mapping class="persistence.products.Product" />
+        <mapping class="persistence.user.User" />
 
     </session-factory>
 

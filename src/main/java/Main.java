@@ -9,7 +9,6 @@ import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.CorsHandler;
 import net.*;
-import org.hibernate.Session;
 import utils.JsonSearch;
 
 import java.util.HashSet;
@@ -17,8 +16,7 @@ import java.util.Set;
 
 public final class Main {
     public static void main(String[] args) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
+        HibernateUtil.open();
 
         final VertxOptions vertxOptions = new VertxOptions();
         vertxOptions.setMaxEventLoopExecuteTime(10000000000L);

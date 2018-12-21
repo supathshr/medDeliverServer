@@ -1,9 +1,9 @@
 import hibernate.HibernateUtil;
 import org.junit.Test;
-import persistence.User;
-import persistence.UserAuthenticator;
-import persistence.UserBuilder;
-import persistence.UserFactory;
+import persistence.logins.LoginAuthenticator;
+import persistence.user.User;
+import persistence.user.UserBuilder;
+import persistence.user.UserGrabber;
 
 import static junit.framework.TestCase.*;
 
@@ -11,7 +11,7 @@ public class UserTests {
 
     @Test
     public void testSaveUser() {
-        final int testUserId = 444;
+        final int testUserId = 445;
 
         User user = new UserBuilder()
                 .setFirstName("Suraj")
@@ -23,7 +23,7 @@ public class UserTests {
 
         HibernateUtil.save(user);
 
-        User u = UserFactory.getUser(testUserId);
+        User u = UserGrabber.get(testUserId);
 
         assertNotNull(u);
         assertEquals("Suraj", u.getFirstName());
@@ -35,7 +35,7 @@ public class UserTests {
 
     @Test
     public void testGetUser() {
-       User user = UserFactory.getUser(1);
+       User user = UserGrabber.get(445);
        assertNotNull(user);
        assertEquals("Suraj", user.getFirstName());
        assertEquals("Kumar", user.getLastName());
@@ -43,14 +43,14 @@ public class UserTests {
 
     @Test
     public void testAuthenticationWithCorrectCreds() {
-        long userId = UserAuthenticator.authenticate("test", "password");
+        long userId = LoginAuthenticator.authenticate("test", "password");
         assertTrue(userId > 0);
     }
 
     @Test
     public void testAuthenticationWithIncorrectCreds() {
-        long userId = UserAuthenticator.authenticate("test", "wrongPassword");
-        long userId2 = UserAuthenticator.authenticate("noSuchUser", "wrongPassword");
+        long userId = LoginAuthenticator.authenticate("test", "wrongPassword");
+        long userId2 = LoginAuthenticator.authenticate("noSuchUser", "wrongPassword");
         assertTrue(userId <= 0);
         assertTrue(userId2 <= 0);
     }

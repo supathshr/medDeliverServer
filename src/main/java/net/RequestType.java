@@ -2,10 +2,8 @@ package net;
 
 public enum RequestType {
     AUTHENTICATION("authentication"),
-    VIEW_PRIVATE_MESSAGE("viewPrivateMessage"),
-    VIEW_ALL_PRIVATE_MESSAGES("viewAllPrivateMessages"),
-    VIEW_FRIENDS("viewFriends"),
-    SEND_PRIVATE_MESSAGE("sendPrivateMessage");
+    GET_PRODUCT("getProduct"),
+    GET_PRODUCTS("getProducts");
 
     private String tag;
     RequestType(String tag) {

@@ -1,9 +1,9 @@
 package net;
 
 import persistence.AuthenticatedUsers;
-import persistence.User;
-import persistence.UserAuthenticator;
-import persistence.UserFactory;
+import persistence.logins.LoginAuthenticator;
+import persistence.user.User;
+import persistence.user.UserGrabber;
 
 public class AuthenticationRequestHandler extends RequestHandler<AuthenticationRequest> {
 
@@ -13,13 +13,13 @@ public class AuthenticationRequestHandler extends RequestHandler<AuthenticationR
         String username = message.username;
         String password = message.password;
 
-        long userId = UserAuthenticator.authenticate(username, password);
+        long userId = LoginAuthenticator.authenticate(username, password);
         if(userId <= 0) {
             //Auth failed
             return new AuthenticationResponse("", false);
         }
 
-        User user = UserFactory.getUser(userId);
+        User user = UserGrabber.get(userId);
         if(null == user) {
             //Something is wrong, investigate
             return new AuthenticationResponse("", false);
