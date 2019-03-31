@@ -7,7 +7,7 @@
 
     <session-factory>
         <!-- Database connection settings -->
-        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
         <property name="connection.url">jdbc:mysql://dragon.kent.ac.uk/co600_c37</property>
 
         <property name="connection.username">co600_c37</property>
@@ -35,7 +35,6 @@
 
         <!-- Path to Mapping files -->
         <mapping class="persistence.jobs.Job" />
-        <mapping class="persistence.logins.Login" />
         <mapping class="persistence.orders.Order" />
         <mapping class="persistence.pharmacies.Pharmacy" />
         <mapping class="persistence.products.Product" />
