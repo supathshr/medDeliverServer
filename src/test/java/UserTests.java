@@ -35,10 +35,10 @@ public class UserTests {
 
     @Test
     public void testGetUser() {
-       User user = UserGrabber.get(445);
-       assertNotNull(user);
-       assertEquals("Suraj", user.getFirstName());
-       assertEquals("Kumar", user.getLastName());
+        User user = UserGrabber.get(445);
+        assertNotNull(user);
+        assertEquals("Suraj", user.getFirstName());
+        assertEquals("Kumar", user.getLastName());
     }
 
     @Test

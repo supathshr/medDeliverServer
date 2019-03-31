@@ -1,42 +1,34 @@
 package persistence.orders;
 
 import hibernate.HibernateUtil;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
-import persistence.pharmacies.Pharmacy;
 
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.List;
 
+/**
+ * This class is used to grab Order information from the database.
+ *
+ * @author Suraj Kumar <a href="mailto:sk551@kent.ac.uk">sk551@kent.ac.uk</a>
+ */
 public class OrderGrabber {
 
+    /**
+     * Gets a specific Order based on the Id
+     *
+     * @param id The id of the order
+     * @return The Order object, null if no matching Id found
+     */
     public static Order get(long id) {
+        final List<?> result = HibernateUtil.queryDatabase("from Order WHERE id=:id", new HashMap<String, Object>() {{
+            put("id", id);
+        }});
 
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-
-        Order order = null;
-
-        try {
-
-            Query query = session.createQuery("from Order WHERE id=:id");
-            query.setParameter("id", id);
-
-            Iterator<Order> it = query.iterate();
-            int counter = 0;
-            while(it.hasNext()) {
-                order = it.next();
-                counter++;
-            }
-            if(counter > 0) {
-                System.out.println("Found " + counter + " orders for id " + id);
-            } else {
-                System.out.println("Order id " + id + " not found.");
-            }
-        } finally {
-            //     session.getTransaction().commit(); //TODO: check if this needed/correct
+        if (result.size() <= 0) {
+            System.out.println("No product for id " + id + " found.");
+            return null;
         }
 
-        return order;
+        return (Order) result.get(0);
     }
 
 }

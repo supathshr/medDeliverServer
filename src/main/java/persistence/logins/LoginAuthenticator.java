@@ -1,38 +1,35 @@
 package persistence.logins;
 
 import hibernate.HibernateUtil;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
+import persistence.user.User;
 
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.List;
 
+/**
+ * This class is used to authenticate user login.
+ *
+ * @author Suraj Kumar <a href="mailto:sk551@kent.ac.uk">sk551@kent.ac.uk</a>
+ */
 public class LoginAuthenticator {
-    public static long authenticate(String username, String password) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        Login user = new Login();
-        try {
+    /**
+     * Checks if a username and password combination exists in the database
+     *
+     * @param username The username of the User
+     * @param password The encrypted password of the User
+     * @return The user object if the User is authenticated otherwise null
+     */
+    public static User authenticate(String username, String password) {
+        final List<?> result = HibernateUtil.queryDatabase("from User WHERE username=:username AND password=:password", new HashMap<String, Object>() {{
+            put("username", username);
+            put("password", password);
+        }});
 
-            Query query = session.createQuery("from Login WHERE username=:username AND password=:password");
-            query.setParameter("username", username);
-            query.setParameter("password", password);
-
-            Iterator<Login> it = query.iterate();
-            int counter = 0;
-            while(it.hasNext()) {
-                user = it.next();
-                counter++;
-            }
-            if(counter > 0) {
-                System.out.println("Found " + counter + " users for username " + username);
-            } else {
-                System.out.println(username + " not found.");
-            }
-        } finally {
-            session.getTransaction().commit(); //TODO: check if this needed/correct
+        if (result.size() <= 0) {
+            System.out.println(username + " not authenticated, invalid credentials.");
+            return null;
         }
 
-        return user.getUserId();
+        return (User) result.get(0);
     }
-
 }

@@ -1,41 +1,79 @@
 package persistence.pharmacies;
 
 import hibernate.HibernateUtil;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
+/**
+ * This class is used to grab Pharmacy information from the database.
+ *
+ * @author Suraj Kumar <a href="mailto:sk551@kent.ac.uk">sk551@kent.ac.uk</a>
+ */
 public class PharmacyGrabber {
 
-    public static Pharmacy get(long id) {
+    public static <T> ArrayList<T> removeDuplicates(List<T> list)
+    {
 
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
+        // Create a new ArrayList
+        ArrayList<T> newList = new ArrayList<T>();
 
-        Pharmacy pharmacy = null;
+        // Traverse through the first list
+        for (T element : list) {
 
-        try {
+            // If this element is not present in newList
+            // then add it
+            if (!newList.contains(element)) {
 
-            Query query = session.createQuery("from Pharmacy WHERE id=:id");
-            query.setParameter("id", id);
-
-            Iterator<Pharmacy> it = query.iterate();
-            int counter = 0;
-            while(it.hasNext()) {
-                pharmacy = it.next();
-                counter++;
+                newList.add(element);
             }
-            if(counter > 0) {
-                System.out.println("Found " + counter + " pharmacies for id " + id);
-            } else {
-                System.out.println("Pharmacy id " + id + " not found.");
-            }
-        } finally {
-            //     session.getTransaction().commit(); //TODO: check if this needed/correct
         }
 
-        return pharmacy;
+        // return the new list
+        return newList;
+    }
+
+    /**
+     * Gets an array of pharmacies were the post code or address match the passed query.
+     *
+     * @param search The query to search for pharmacies with
+     * @return An array of Pharmacy objects that have been found otherwise null for no pharmacies matching the search.
+     */
+    public static Pharmacy[] get(String search) {
+        //final List<?> result = HibernateUtil.queryDatabase("from Pharmacy WHERE postCode LIKE '%" + search + "%' OR address LIKE '%" + search + "%'", null);
+
+        final List<?> result1 = HibernateUtil.queryDatabase("from Pharmacy WHERE postCode LIKE :search OR name LIKE :search OR address LIKE :search", new HashMap<String, Object>() {{
+            put("search", "%" + search + "%");
+        }});
+
+        final List<?> result = removeDuplicates(result1);
+
+        if (result.size() <= 0) {
+            System.out.println("No pharmacies found for query: " + search);
+            return null;
+        }
+
+        return result.toArray(new Pharmacy[result.size()]);
+    }
+
+    /**
+     * Gets the Pharmacy object by a specific pharmacyID
+     *
+     * @param id The pharmacy Id
+     * @return The Pharmacy object, null if no matching id found.
+     */
+    public static Pharmacy get(long id) {
+        final List<?> result = HibernateUtil.queryDatabase("from Pharmacy WHERE pharmacyID=:id", new HashMap<String, Object>() {{
+            put("id", id);
+        }});
+
+        if (result.size() <= 0) {
+            System.out.println("No pharmacy for id " + id + " found.");
+            return null;
+        }
+
+        return (Pharmacy) result.get(0);
     }
 
 }

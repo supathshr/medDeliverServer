@@ -5,6 +5,17 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * This class is used by Hibernate to map to the Jobs table.
+ * <p>
+ * A {@code Job} represents a job for a Med-Deliver driver.
+ * <p>
+ * Jobs are persistable however changes are not automatically updated to the database.
+ * To persist a {@code Job} you must use the {@link hibernate.HibernateUtil#save(Object)}
+ * method.
+ *
+ * @author Suraj Kumar <a href="mailto:sk551@kent.ac.uk">sk551@kent.ac.uk</a>
+ */
 @Entity
 @Table(name = "jobs")
 public class Job {
@@ -19,7 +30,8 @@ public class Job {
     @Column(name = "completed")
     private boolean completed;
 
-    public Job() {}
+    public Job() {
+    }
 
     public long getId() {
         return id;

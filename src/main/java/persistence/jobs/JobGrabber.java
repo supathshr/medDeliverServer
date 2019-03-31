@@ -1,45 +1,33 @@
 package persistence.jobs;
 
 import hibernate.HibernateUtil;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
-import persistence.products.Product;
 
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.List;
 
+/**
+ * This class is used to grab Jobs information from the database.
+ *
+ * @author Suraj Kumar <a href="mailto:sk551@kent.ac.uk">sk551@kent.ac.uk</a>
+ */
 public class JobGrabber {
 
     /**
-     * @param id The order ID
-     * @return
+     * Gets a specific Job based on the Id
+     *
+     * @param id The Job ID
+     * @return The Job object if a matching id is found
      */
     public static Job get(long id) {
+        final List<?> result = HibernateUtil.queryDatabase("from Job WHERE jobId=:id", new HashMap<String, Object>() {{
+            put("id", id);
+        }});
 
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-
-        Job job = null;
-
-        try {
-
-            Query query = session.createQuery("from Job WHERE jobId=:id");
-            query.setParameter("id", id);
-
-            Iterator<Job> it = query.iterate();
-            int counter = 0;
-            while(it.hasNext()) {
-                job = it.next();
-                counter++;
-            }
-            if(counter > 0) {
-                System.out.println("Found " + counter + " jobs for id " + id);
-            } else {
-                System.out.println("Cannot find job for order id " + id + " not found.");
-            }
-        } finally {
-            //     session.getTransaction().commit(); //TODO: check if this needed/correct
+        if (result.size() <= 0) {
+            System.out.println("No job for Id " + id + " found.");
+            return null;
         }
 
-        return job;
+        return (Job) result.get(0);
     }
 }

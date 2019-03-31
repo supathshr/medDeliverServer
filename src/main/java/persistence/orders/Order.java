@@ -5,6 +5,15 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * This class is used by Hibernate to map to the Orders table.
+ * <p>
+ * Orders are persistable however changes are not automatically updated to the database.
+ * To persist a {@code Order} you must use the {@link hibernate.HibernateUtil#save(Object)}
+ * method.
+ *
+ * @author Suraj Kumar <a href="mailto:sk551@kent.ac.uk">sk551@kent.ac.uk</a>
+ */
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -28,7 +37,8 @@ public class Order {
     @Column(name = "delivered")
     private boolean delivered;
 
-    public Order() {}
+    public Order() {
+    }
 
     public long getId() {
         return id;
